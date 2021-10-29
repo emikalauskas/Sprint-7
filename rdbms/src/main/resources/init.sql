@@ -1,12 +1,13 @@
 --liquibase formatted sql
 
---changeset rrmasgutov:init
+--changeset esmikalauskas:init
 
-create table account1
+create table account
 (
-    id bigserial constraint account_pk primary key,
-    amount int,
-    version int
+    id long,
+    amount long,
+    version long
 );
+
 
 
