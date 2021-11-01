@@ -2,12 +2,18 @@
 
 --changeset esmikalauskas:init
 
-create table account
+create table account1
 (
-    id long,
-    amount long,
-    version long
+    id bigserial constraint account_pk primary key,
+    amount int,
+    version int
 );
+
+--changeset esmikalauskas:add
+
+insert into account1 values
+(1, 500, 1),
+(2, 500, 1);
 
 
 
