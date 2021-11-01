@@ -15,19 +15,18 @@ class TransferPessimisticLock {
             try {
                 conn.autoCommit = false
                 val prepareStatement1 =
-                    conn.prepareStatement("select * from account1 where id = $accountId1 for update")
+                    conn.prepareStatement("select * from account1 where id = $accountId1")
                 prepareStatement1.executeQuery().use { statement ->
                     statement.next()
                     if (statement.getInt("amount") - amount < 0)
                         throw CustomException("Недостаточно средств")
                 }
                 val prepareStatement2 =
-                    conn.prepareStatement("update account1 set amount = amount - $amount where id = $accountId1")
-                prepareStatement2.executeUpdate()
-
+                    conn.prepareStatement("select * from account1 where id in ($accountId1, $accountId2) for update")
+                prepareStatement2.executeQuery()
                 val prepareStatement3 =
-                    conn.prepareStatement("select * from account1 where id = $accountId2 for update")
-                prepareStatement3.executeQuery()
+                    conn.prepareStatement("update account1 set amount = amount - $amount where id = $accountId1")
+                prepareStatement3.executeUpdate()
                 val prepareStatement4 =
                     conn.prepareStatement("update account1 set amount = amount + $amount where id = $accountId2")
                 prepareStatement4.executeUpdate()
@@ -43,5 +42,5 @@ class TransferPessimisticLock {
 }
 
 fun main() {
-    TransferOptimisticLock().transfer(2,1,100)
+    TransferPessimisticLock().transfer(2,1,100)
 }
