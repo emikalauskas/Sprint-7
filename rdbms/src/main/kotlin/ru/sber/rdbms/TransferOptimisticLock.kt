@@ -16,7 +16,7 @@ class TransferOptimisticLock {
             try {
                 conn.autoCommit = false
                 val prepareStatement1 =
-                    conn.prepareStatement("select * from account1 where id = $accountId1 for update")
+                    conn.prepareStatement("select * from account1 where id = $accountId1")
                 prepareStatement1.executeQuery().use { statement ->
                     statement.next()
                     if (statement.getInt("amount") - amount < 0)
@@ -31,7 +31,7 @@ class TransferOptimisticLock {
                     throw CustomException("Нарушение целостности данных")
 
                 val prepareStatement3 =
-                    conn.prepareStatement("select * from account1 where id = $accountId2 for update")
+                    conn.prepareStatement("select * from account1 where id = $accountId2")
                 prepareStatement3.executeQuery().use { statement ->
                     statement.next()
                     oldVersion = statement.getInt("version")
