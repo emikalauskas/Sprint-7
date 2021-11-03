@@ -10,7 +10,6 @@ class StudentDAO(
         sessionFactory.openSession().use {
             it.beginTransaction()
             it.save(student)
-            it.
             it.transaction.commit()
         }
     }
