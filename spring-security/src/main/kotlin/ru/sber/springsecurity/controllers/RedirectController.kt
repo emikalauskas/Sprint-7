@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping
 class RedirectController {
     @GetMapping("/")
     fun redirectToLoginPage(): String {
-        return "redirect:/login"
+        return "redirect:/app/list"
     }
 }

@@ -1,6 +1,7 @@
 package ru.sber.springsecurity.controllers
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import ru.sber.springsecurity.services.AddressBook
@@ -8,7 +9,7 @@ import ru.sber.springsecurity.services.Note
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@RestController
+@Controller
 @RequestMapping("/app")
 class AppController @Autowired constructor(val addressBook: AddressBook) {
 
