@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.*
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -27,6 +28,7 @@ internal class ApiTest {
 
     val jsonData = """{"name" : "Eduard", "address" : "Moscow"}"""
 
+    @WithMockUser(username = "api", password = "api", roles = ["API"])
     @Test
     fun getListOfRecords() {
         mockMvc.perform(
@@ -35,6 +37,7 @@ internal class ApiTest {
             .andExpect(status().isOk)
     }
 
+    @WithMockUser(username = "api", password = "api", roles = ["API"])
     @Test
     fun getRecord() {
         mockMvc.perform(
@@ -43,6 +46,7 @@ internal class ApiTest {
             .andExpect(status().isOk)
     }
 
+    @WithMockUser(username = "api", password = "api", roles = ["API"])
     @Test
     fun editRecord() {
         mockMvc.perform(
@@ -53,6 +57,7 @@ internal class ApiTest {
             .andExpect(status().isOk)
     }
 
+    @WithMockUser(username = "api", password = "api", roles = ["API"])
     @Test
     fun addRecord() {
         mockMvc.perform(
@@ -63,6 +68,7 @@ internal class ApiTest {
             .andExpect(status().isOk)
     }
 
+    @WithMockUser(username = "api", password = "api", roles = ["API"])
     @Test
     fun deleteRecord() {
         mockMvc.perform(

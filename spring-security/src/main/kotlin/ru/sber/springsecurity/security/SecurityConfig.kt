@@ -27,14 +27,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         auth.jdbcAuthentication()
             .dataSource(dataSource)
             .passwordEncoder(passwordEncoder)
-            .usersByUsernameQuery(
-                "select username, password, 'true' from my_users " +
-                        "where username=?"
-            )
-            .authoritiesByUsernameQuery(
-                "select username, role from my_users " +
-                        "where username=?"
-            )
+            .usersByUsernameQuery("select username, password, 'true' from my_users where username=?")
+            .authoritiesByUsernameQuery("select username, role from my_users where username=?")
     }
 
     override fun configure(http: HttpSecurity) {

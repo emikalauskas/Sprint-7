@@ -8,7 +8,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.Instant
 import javax.servlet.http.Cookie
 
@@ -18,40 +21,48 @@ class AppTests {
 	@Autowired
 	lateinit var mockMvc: MockMvc
 
+	@WithMockUser(username = "admin", password = "admin", roles = ["ADMIN"])
 	@Test
 	fun addNote() {
-		mockMvc.perform(post("/app/add")
-			.param("name", "Eduard")
-			.param("address", "Moscow")
-			.cookie(Cookie("Auth", Instant.now().toEpochMilli().toString())))
-			.andExpect(status().isOk)
-			.andExpect(content().string(containsString("redirect:/app/list")))
+		mockMvc.perform(MockMvcRequestBuilders.get("/app/list"))
+			.andExpect(MockMvcResultMatchers.status().isOk)
+			.andExpect(MockMvcResultMatchers.view().name("app-list-page"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/app/add")
+				.param("name", "Eduard")
+				.param("address", "Moscow"))
+			.andExpect(MockMvcResultMatchers.status().isFound)
 	}
 
+	@WithMockUser(username = "admin", password = "admin", roles = ["ADMIN"])
 	@Test
 	fun deleteNote() {
-		mockMvc.perform(post("/app/0/delete")
-			.cookie(Cookie("Auth", Instant.now().toEpochMilli().toString())))
-			.andExpect(status().isOk)
-			.andExpect(content().string(containsString("redirect:/app/list")))
+		mockMvc.perform(MockMvcRequestBuilders.get("/app/list"))
+			.andExpect(MockMvcResultMatchers.status().isOk)
+			.andExpect(MockMvcResultMatchers.view().name("app-list-page"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/app/0/delete"))
+			.andExpect(MockMvcResultMatchers.status().isFound)
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/app/list"))
 	}
 
+	@WithMockUser(username = "admin", password = "admin", roles = ["ADMIN"])
 	@Test
 	fun editNote() {
-		mockMvc.perform(post("/app/0/edit")
+		mockMvc.perform(MockMvcRequestBuilders.get("/app/list"))
+			.andExpect(MockMvcResultMatchers.status().isOk)
+			.andExpect(MockMvcResultMatchers.view().name("app-list-page"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/app/0/edit")
 			.param("name", "Eduard")
-			.param("address", "Moscow")
-			.cookie(Cookie("Auth", Instant.now().toEpochMilli().toString())))
-			.andExpect(status().isOk)
-			.andExpect(content().string(containsString("redirect:/app/list")))
+			.param("address", "Rostov-on-Don"))
+			.andExpect(MockMvcResultMatchers.status().isFound)
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/app/list"))
 	}
 
+	@WithMockUser(username = "user", password = "user", roles = ["USER"])
 	@Test
 	fun listAll() {
-		mockMvc.perform(get("/app/list")
-			.cookie(Cookie("Auth", Instant.now().toEpochMilli().toString())))
-			.andExpect(status().isOk)
-			.andExpect(content().string(containsString("app-list-page")))
+		mockMvc.perform(MockMvcRequestBuilders.get("/app/list"))
+			.andExpect(MockMvcResultMatchers.status().isOk)
+			.andExpect(MockMvcResultMatchers.view().name("app-list-page"))
 	}
 
 }
